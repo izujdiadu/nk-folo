@@ -1,0 +1,82 @@
+.about-container {
+  width: 100%;
+  /* La couleur de fond est gérée via l'inline style dans About.js */
+}
+
+.about-tab {
+  padding: 40px;
+}
+  
+.about-title {
+  font-size: 70px;
+  color: white;
+  text-decoration: underline;
+}
+
+.about-desc {
+  margin-top: 80px;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px white;
+  font-size: 42px;
+  margin-bottom: 260px;
+  letter-spacing: 6px;
+}
+
+.about-desc h3 {
+  margin-top: 40px;
+  letter-spacing: 0px;
+}
+
+#problems {
+  color: #D32F2F;
+  -webkit-text-stroke: 0px white;
+}
+
+.about-game-title {
+  color: white;
+  font-size: 42px;
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .about-title {
+    font-size: 55px;
+  }
+  .about-desc {
+    font-size: 36px;
+    margin-bottom: 200px;
+  }
+  .about-game-title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 45px;
+  }
+  .about-desc {
+    font-size: 30px;
+    margin-bottom: 160px;
+  }
+  .about-game-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-title {
+    font-size: 35px;
+    text-align: center;
+  }
+  .about-desc {
+    font-size: 18px;
+    margin-bottom: 120px;
+  }
+  .about-game-title {
+    font-size: 24px;
+  }
+}

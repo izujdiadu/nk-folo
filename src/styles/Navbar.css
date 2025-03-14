@@ -1,0 +1,154 @@
+/* ================== Navbar Styles ================== */
+
+.navbar-container {
+  position: fixed; /* Fixe la navbar en haut */
+  top: 0;
+  left: 0;
+  width: 100%; /* Fond légèrement transparent */
+  padding: 40px; /* Ajuste le padding */
+  z-index: 9900; /* Assure que la navbar est au-dessus des autres éléments */
+}
+
+
+.navbar-tab {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.navbar-logo img {
+  width: 100%;
+  max-width: 80px; 
+  cursor: pointer;
+}
+
+.navbar-menu {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.menu-icon {
+  color: white;
+}
+
+/* Responsive navbar */
+@media (max-width: 1024px) {
+  .navbar-container {
+    padding: 30px;
+  }
+  .navbar-logo img {
+    width: 70px;
+  }
+  .navbar-menu {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 20px;
+  }
+  .navbar-logo img {
+    width: 60px;
+  }
+  .navbar-menu {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 15px;
+  }
+  .navbar-logo img {
+    width: 40px;
+  }
+  .navbar-menu {
+    font-size: 18px;
+  }
+}
+
+/* ================= Overlay Menu Styles ================== */
+
+/* Assurez-vous que le menu est positionné correctement */
+.menu-overlay {
+  position: fixed; /* Gardons position fixed pour que le menu prenne tout l'écran */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #FFA07A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9901; /* Le menu sera au-dessus des mots */
+  opacity: 0;
+  animation: fadeInOverlay 0.5s forwards;
+}
+
+/* Style pour les mots aléatoires générés */
+.random-word {
+  position: absolute; /* Important pour que le mot soit placé par rapport à l'écran et non au flux normal */
+  z-index: -99; /* Pour les mettre derrière le menu */
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.menu-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-item {
+  font-size: 70px;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.menu-item:hover { /* Couleur stylée au survol */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  -webkit-text-stroke: 1px #212121;
+}
+
+/* ================= Close Button ================== */
+.close-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  z-index: 1001; /* Pour qu'il soit au-dessus du menu */
+  transition: color 0.3s;
+}
+
+.close-menu:hover {
+  color: #212121;
+}
+
+/* Responsive Overlay Menu */
+@media (max-width: 1024px) {
+  .menu-item {
+    font-size: 55px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-item {
+    font-size: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-item {
+    font-size: 35px;
+  }
+}

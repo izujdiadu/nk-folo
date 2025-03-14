@@ -1,0 +1,36 @@
+.footer-container {
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 20px;
+  position: absolute;
+  right: 0;
+  z-index: -1;
+  font-size: 18px;
+}
+
+/* Écrans moyens (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .footer-container {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* Tablettes (max-width: 768px) */
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+/* Téléphones (max-width: 480px) */
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 8px;
+    font-size: 12px;
+    text-align: center;
+  }
+}
