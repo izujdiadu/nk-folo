@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import "../styles/Contact.css";
 import { FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
 
@@ -8,29 +8,26 @@ function Contact() {
   const forgotRef = useRef(null);
   const h3Ref = useRef(null);
 
-  // Fonction pour calculer la taille du texte en fonction de la largeur de l'écran
-  const getResponsiveFontSize = (screenWidth) => {
+  const getResponsiveFontSize = useCallback((screenWidth) => {
     if (screenWidth <= 480) {
-      return 40; // Taille de police pour les téléphones
+      return 40; // Téléphones
     } else if (screenWidth <= 768) {
-      return 60; // Taille de police pour les tablettes
+      return 60; // Tablettes
     } else if (screenWidth <= 1024) {
-      return 80; // Taille de police pour les petits écrans
+      return 80; // Petits écrans
     } else {
-      return 120; // Taille de police pour les grands écrans
+      return 120; // Grands écrans
     }
-  };
+  }, []);
 
-  // Fonction pour animer les éléments en fonction du scroll
-  const handleScroll = () => {
-    const screenWidth = window.innerWidth; // Taille de l'écran
-    const fontSize = getResponsiveFontSize(screenWidth); // Calcul de la taille du texte selon la taille de l'écran
+  const handleScroll = useCallback(() => {
+    const screenWidth = window.innerWidth;
+    const fontSize = getResponsiveFontSize(screenWidth);
 
-    // Animation des éléments pendant le scroll
     if (oopsRef.current) {
       const rect = oopsRef.current.getBoundingClientRect();
       const progress = Math.min(Math.max((window.innerHeight - rect.top) / window.innerHeight, 0), 1);
-      const newFontSize = fontSize + (100 - fontSize) * progress; // Animation dynamique
+      const newFontSize = fontSize + (100 - fontSize) * progress;
       oopsRef.current.style.fontSize = `${newFontSize}px`;
       oopsRef.current.style.color = progress > 0.5 ? "white" : "transparent";
     }
@@ -38,7 +35,7 @@ function Contact() {
     if (forgotRef.current) {
       const rect = forgotRef.current.getBoundingClientRect();
       const progress = Math.min(Math.max((window.innerHeight - rect.top) / window.innerHeight, 0), 1);
-      const newFontSize = fontSize + (100 - fontSize) * progress; // Animation dynamique
+      const newFontSize = fontSize + (100 - fontSize) * progress;
       forgotRef.current.style.fontSize = `${newFontSize}px`;
       forgotRef.current.style.color = progress > 0.5 ? "white" : "transparent";
     }
@@ -46,20 +43,17 @@ function Contact() {
     if (h3Ref.current) {
       const rect = h3Ref.current.getBoundingClientRect();
       const progress = Math.min(Math.max((window.innerHeight - rect.top) / window.innerHeight, 0), 1);
-      const newFontSize = fontSize + (100 - fontSize) * progress; // Animation dynamique
+      const newFontSize = fontSize + (100 - fontSize) * progress;
       h3Ref.current.style.fontSize = `${newFontSize}px`;
     }
-  };
+  }, [getResponsiveFontSize]);
 
-  // Ajout du listener de scroll
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Applique une première exécution au montage
-
+    handleScroll(); // Première exécution au montage
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
-  // Animation de la ligne via IntersectionObserver
   useEffect(() => {
     const lineElement = lineRef.current;
     if (!lineElement) return;
