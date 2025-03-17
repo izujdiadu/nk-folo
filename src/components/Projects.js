@@ -69,7 +69,8 @@ function Projects() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
-          const position = scrollY / 10;
+          // Modification ici : ajustement selon la largeur de l'écran
+          const position = window.innerWidth <= 480 ? scrollY / 8 : scrollY / 10;
           setTitlePosition(position);
           const newWidth = Math.min(scrollY / 3, 100);
           setBackgroundWidth(newWidth);
@@ -85,9 +86,9 @@ function Projects() {
 
   const project = projectData[currentProject];
 
-  // Ajustement de la translation du titre sur petit écran (ex: téléphones)
-  const adjustedTitlePosition =
-    window.innerWidth <= 480 ? titlePosition * 0.4 : titlePosition;
+  // Vous pouvez désormais utiliser titlePosition directement, sans ajustement additionnel
+  // ou conserver un ajustement minimal si besoin.
+  const adjustedTitlePosition = titlePosition;
 
   const containerVariants = {
     hidden: { opacity: 0, height: 0 },

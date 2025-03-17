@@ -1,6 +1,6 @@
 .about-container {
   width: 100%;
-  /* La couleur de fond est gérée via l'inline style dans About.js */
+  /* La couleur de fond est gérée en inline dans About.js */
 }
 
 .about-tab {
@@ -40,7 +40,7 @@
   margin-bottom: 80px;
 }
 
-/* Responsive Design */
+/* Responsive Design pour About */
 @media (max-width: 1024px) {
   .about-title {
     font-size: 55px;
@@ -68,6 +68,9 @@
 }
 
 @media (max-width: 480px) {
+  .about-container {
+    min-height: 100vh;
+  }
   .about-title {
     font-size: 35px;
     text-align: center;

@@ -1,4 +1,3 @@
-/* Styles principaux du Header */
 .header-container {
   width: 100%;
   transition: background-color 0.5s ease-out;  /* Transition fluide de la couleur */
@@ -32,7 +31,7 @@
 .header-catchphrase {
   font-size: 40px;
   color: #212121;
-  animation: fadeInUp 1s ease-out forwards; /* L'animation se joue au moment du chargement */
+  animation: fadeInUp 1s ease-out forwards;
 }
 
 .header-credit {
@@ -49,8 +48,10 @@
 
 .header-video video {
   width: 100%;
-  max-width: 100%; /* Evite le débordement horizontal */
+  max-width: 100%;
   height: auto;
+  pointer-events: none; /* Désactive les clics et interactions sur la vidéo */
+  will-change: transform, opacity; /* Optimise les transformations et l'opacité */
 }
 
 .header-banderole {
@@ -99,9 +100,7 @@
   -webkit-text-stroke: 2px white;
 }
 
-/* Responsive Design */
-
-/* Tablettes et écrans moyens */
+/* Responsive Design pour le Header */
 @media (max-width: 1024px) {
   .header-catchphrase {
     font-size: 30px;
@@ -123,7 +122,6 @@
   }
 }
 
-/* Petits écrans (tablettes en portrait / petits appareils) */
 @media (max-width: 768px) {
   .header-catchphrase {
     font-size: 28px;
@@ -144,7 +142,6 @@
   }
 }
 
-/* Téléphones (petits écrans) */
 @media (max-width: 480px) {
   .header-catchphrase {
     font-size: 24px;

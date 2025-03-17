@@ -42,7 +42,8 @@ function About() {
 
     const updateStyles = () => {
       const scrollY = window.scrollY;
-      setTitlePosition(scrollY / 10);
+      // Modification ici : coefficient différent pour mobile
+      setTitlePosition(window.innerWidth <= 480 ? scrollY / 8 : scrollY / 10);
       setBackgroundWidth(Math.min(scrollY / 3, 100));
 
       if (containerRef.current) {
@@ -72,7 +73,7 @@ function About() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    updateStyles(); // exécution initiale
+    updateStyles(); // Exécution initiale
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };

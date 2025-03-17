@@ -1,10 +1,10 @@
 .languages-container {
   position: relative;
   background-color: #212121;
-
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* Zone du titre */
 .languages-tab {
   padding: 40px;
 }
@@ -14,19 +14,17 @@
   font-size: 70px;
   color: #FFA07A;
   transform: rotate(-4deg);
-  
 }
 
-/* Conteneur pour les subtabs : occupe toute la largeur et masque l'excédent */
 .subtabs-container {
   position: relative;
   width: 100%;
-  overflow: auto;  /* Permet de faire défiler les subtabs sans les masquer */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
-  flex-direction: column;  /* Aligne les subtabs les uns sous les autres */
+  flex-direction: column;
 }
 
-/* Chaque subtab prend une taille automatique et est espacé avec marginBottom */
 .languages-subtab {
   display: flex;
   flex-direction: column;
@@ -34,17 +32,15 @@
   align-items: center;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat; /* Ajoute de l'espace entre les subtabs */
+  background-repeat: no-repeat;
 }
 
-/* Style des images */
 .languages-subtab-pic img {
   width: 400px;
   margin-bottom: 0;
   padding: 0;
 }
 
-/* Style de la description */
 .languages-subtab-desc {
   color: white;
   font-size: 22px;

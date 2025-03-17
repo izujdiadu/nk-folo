@@ -9,20 +9,19 @@
 
 .contact-title h1 {
   font-size: 130px;
-  color:white;
+  color: white;
   margin-bottom: 180px;
 }
-
-.contact-title h3 {
-  font-size: 60px;
-}
-
 
 .contact-title h2 {
   -webkit-text-stroke: 1px white;
   color: transparent;
   font-size: 60px;
   margin-bottom: 180px;
+}
+
+.contact-title h3 {
+  font-size: 60px;
 }
 
 /* Ligne de base sans animation */
@@ -32,6 +31,7 @@
   margin: 40px auto;
   background-color: #ff0000;
   position: relative;
+  will-change: height, background-color;
 }
 
 /* Classe à ajouter pour lancer l'animation */
@@ -39,7 +39,6 @@
   animation: lineGrow 3s forwards;
 }
 
-/* Animation de la ligne : elle grandit en descendant et change de couleur */
 @keyframes lineGrow {
   0% {
     height: 0;
@@ -54,7 +53,7 @@
   }
 }
 
-/* Conteneur des icônes, qui apparaissent à la fin de l'animation */
+/* Conteneur des icônes */
 .icons {
   opacity: 0;
   animation: iconsFadeIn 1s forwards;
@@ -65,6 +64,7 @@
   transform: translateX(-50%);
   display: flex;
   gap: 20px;
+  will-change: opacity, transform;
 }
 
 @keyframes iconsFadeIn {
@@ -85,22 +85,22 @@
 
 /* Couleurs spécifiques en hover */
 a[href*="github.com"] .icon:hover {
-  color: #171515; /* Couleur GitHub */
+  color: #171515;
 }
 
 a[href^="mailto"] .icon:hover {
-  color: #D44638; /* Couleur Gmail */
+  color: #D44638;
 }
 
 a[href*="linkedin.com"] .icon:hover {
-  color: #0077B5; /* Couleur LinkedIn */
+  color: #0077B5;
 }
 
-/* Message à droite qui apparait à la fin du défilement */
+/* Message à droite */
 .end-message {
   position: absolute;
   width: 400px;
-  right: -550px; /* Ajustez selon votre design */
+  right: -550px;
   top: 70%;
   font-size: 40px;
   color: #303F9F;
@@ -108,6 +108,7 @@ a[href*="linkedin.com"] .icon:hover {
   animation: messageFadeIn 1s forwards;
   animation-delay: 3s;
   transform: rotate(-20deg);
+  will-change: opacity, transform;
 }
 
 @keyframes messageFadeIn {
@@ -119,24 +120,19 @@ a[href*="linkedin.com"] .icon:hover {
   }
 }
 
-/* Responsive Design */
-
-/* Écrans moyens (max-width: 1024px) */
+/* Responsive Design pour Contact */
 @media (max-width: 1024px) {
   .contact-tab {
     padding: 30px;
   }
- 
   .contact-title h1 {
     font-size: 110px;
     margin-bottom: 60px;
   }
-  
   .contact-title h2 {
     font-size: 90px;
     margin-bottom: 60px;
   }
-
   .contact-title h3 {
     font-size: 90px;
     margin-bottom: 60px;
@@ -145,7 +141,6 @@ a[href*="linkedin.com"] .icon:hover {
     width: 35px;
     margin: 30px auto;
   }
-
   .icons {
     bottom: -70px;
   }
@@ -160,22 +155,18 @@ a[href*="linkedin.com"] .icon:hover {
   }
 }
 
-/* Tablettes (max-width: 768px) */
 @media (max-width: 768px) {
   .contact-tab {
     padding: 20px;
   }
-
   .contact-title h1 {
     font-size: 90px;
     margin-bottom: 60px;
   }
-  
   .contact-title h2 {
     font-size: 70px;
     margin-bottom: 60px;
   }
-
   .contact-title h3 {
     font-size: 70px;
     margin-bottom: 60px;
@@ -195,22 +186,18 @@ a[href*="linkedin.com"] .icon:hover {
   }
 }
 
-/* Téléphones (max-width: 480px) */
 @media (max-width: 480px) {
   .contact-tab {
     padding: 15px;
   }
-
   .contact-title h1 {
     font-size: 60px;
     margin-bottom: 60px;
   }
-  
   .contact-title h2 {
     font-size: 40px;
     margin-bottom: 60px;
   }
-
   .contact-title h3 {
     font-size: 40px;
     margin-bottom: 60px;
