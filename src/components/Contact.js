@@ -16,7 +16,7 @@ function Contact() {
     } else if (screenWidth <= 1024) {
       return 60; // Petits écrans
     } else {
-      return 100; // Grands écrans
+      return 120; // Grands écrans
     }
   }, []);
 
