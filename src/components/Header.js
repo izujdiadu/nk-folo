@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Header.css";
 import codingvid from "../videos/codingvid.mp4";
+import newvideo from "../images/newvideo.jpeg"; // Importez l'image à utiliser pour mobile
 import { FaTimes, FaCheckCircle } from "react-icons/fa";
 
 function Header() {
@@ -13,6 +14,17 @@ function Header() {
     filter: "blur(5px) brightness(0.5)",
     boxShadow: "0 0 30px rgba(0, 0, 0, 0.7)",
   });
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Détection du mobile via la largeur d'écran
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+    handleResize(); // Vérifie dès le montage
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -46,13 +58,13 @@ function Header() {
         filter: `blur(${videoBlur}px) brightness(${videoBrightness}) hue-rotate(${videoHue}deg)`,
         boxShadow: videoShadow,
       });
+      ticking = false;
     };
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           updateStyles();
-          ticking = false;
         });
         ticking = true;
       }
@@ -80,10 +92,18 @@ function Header() {
         </div>
 
         <div className="header-video" style={videoStyle}>
-  <video autoPlay muted loop style={{ pointerEvents: "none" }}>
-    <source src={codingvid} type="video/mp4" />
-  </video>
-</div>
+          {isMobile ? (
+            <img
+              src={newvideo}
+              alt="Header"
+              style={{ width: "100%", height: "auto", pointerEvents: "none", willChange: "transform, opacity" }}
+            />
+          ) : (
+            <video autoPlay muted loop style={{ pointerEvents: "none" }}>
+              <source src={codingvid} type="video/mp4" />
+            </video>
+          )}
+        </div>
 
         <div className="header-banderole">
           <div className="banderole-content">
