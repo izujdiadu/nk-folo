@@ -61,19 +61,25 @@ function Projects() {
   const [titlePosition, setTitlePosition] = useState(0); 
   const [backgroundWidth, setBackgroundWidth] = useState(0); 
 
-  // Effet de défilement pour ajuster la position du titre et la largeur du fond
+  // Optimisation du scroll avec requestAnimationFrame et listener passif
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      // Calcul de la position du titre
-      const position = scrollY / 10;
-      setTitlePosition(position);
-      // Calcul de la largeur du fond
-      const newWidth = Math.min(scrollY / 3, 100);
-      setBackgroundWidth(newWidth);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const position = scrollY / 10;
+          setTitlePosition(position);
+          const newWidth = Math.min(scrollY / 3, 100);
+          setBackgroundWidth(newWidth);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -125,7 +131,7 @@ function Projects() {
         <div
           className="projects-title"
           style={{
-            transform: `translateX(${adjustedTitlePosition}px)`, // Utilisation de la valeur ajustée
+            transform: `translateX(${adjustedTitlePosition}px)`,
             backgroundColor: "#D32F2F",
             width: `${backgroundWidth}%`,
             transition: "width 0.3s ease",
@@ -206,7 +212,7 @@ function Projects() {
                 >
                   <div className="projects-subtab2-lang">
                     <h2>PROGRAMMING LANGUAGES:</h2>
-                    <img src={project.languages} alt="Python Logo" />
+                    <img src={project.languages} alt="Project Language" />
                   </div>
                   <div className="projects-subtab2-carousel">
                     <h2>PROJECT GALLERY:</h2>

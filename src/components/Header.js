@@ -5,17 +5,19 @@ import { FaTimes, FaCheckCircle } from "react-icons/fa";
 
 function Header() {
   const [backgroundColor, setBackgroundColor] = useState("transparent");
-  const [textColor, setTextColor] = useState("#212121");  // Couleur du texte
+  const [textColor, setTextColor] = useState("#212121");
   const [isVisible, setIsVisible] = useState(false);
   const [videoStyle, setVideoStyle] = useState({
     opacity: 0,
-    transform: "scale(1.1)", // Taille augmentée à 110%
+    transform: "scale(1.1)",
     filter: "blur(5px) brightness(0.5)",
     boxShadow: "0 0 30px rgba(0, 0, 0, 0.7)",
   });
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateStyles = () => {
       const scrollY = window.scrollY;
       const opacityValue = Math.min(scrollY / 500, 1);
 
@@ -25,21 +27,17 @@ function Header() {
 
       if (scrollY > 0) {
         setBackgroundColor(`rgb(${r}, ${g}, ${b})`);
-        // Plus on descend, plus le texte devient blanc
         setTextColor(`rgb(${255 - r}, ${255 - g}, ${255 - b})`);
       } else {
         setBackgroundColor("transparent");
-        setTextColor("#212121"); // Retour à la couleur d'origine
+        setTextColor("#212121");
       }
 
-      // Effet vidéo avec taille augmentée et flou modéré
       const videoOpacity = Math.min(scrollY / 400, 1);
-      const videoTransform = `scale(1.1) translateY(${Math.min(scrollY / 3, 100)}px) rotate(${scrollY / 30}deg)`; // Taille augmentée à 110%
+      const videoTransform = `scale(1.1) translateY(${Math.min(scrollY / 3, 100)}px) rotate(${scrollY / 30}deg)`;
       const videoBlur = Math.max(5 - scrollY / 50, 0);
       const videoBrightness = Math.min(1 + scrollY / 500, 1.5);
-      const videoShadow = `0 0 ${Math.min(scrollY / 3, 30)}px rgba(0, 0, 0, 0.7)`; // Ombre douce
-
-      // Effet de saturation et teinte
+      const videoShadow = `0 0 ${Math.min(scrollY / 3, 30)}px rgba(0, 0, 0, 0.7)`;
       const videoHue = (scrollY / 5) % 360;
 
       setVideoStyle({
@@ -50,8 +48,17 @@ function Header() {
       });
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateStyles();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
+    window.addEventListener("scroll", handleScroll, { passive: true });
     setIsVisible(true);
 
     return () => {
@@ -63,7 +70,7 @@ function Header() {
     <div className="header-container" style={{ backgroundColor: backgroundColor }}>
       <div className="header-tab">
         <div className="header-phrase">
-          <div className={`header-catchphrase ${isVisible ? 'animate' : ''}`} style={{ color: textColor }}>
+          <div className={`header-catchphrase ${isVisible ? "animate" : ""}`} style={{ color: textColor }}>
             <h1>"TO SOLVE THE <span id="problem">PROBLEM</span>, YOU HAVE</h1>
             <h1>TO BE THE <span id="problem">PROBLEM.</span>"</h1>
           </div>
@@ -73,10 +80,10 @@ function Header() {
         </div>
 
         <div className="header-video" style={videoStyle}>
-          <video autoPlay muted loop>
-            <source src={codingvid} type="video/mp4" />
-          </video>
-        </div>
+  <video autoPlay muted loop style={{ pointerEvents: "none" }}>
+    <source src={codingvid} type="video/mp4" />
+  </video>
+</div>
 
         <div className="header-banderole">
           <div className="banderole-content">

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import "../styles/Languages.css";
 import { motion } from "framer-motion";
 
-// Import des images (adapté à ton projet)
+// Import des images
 import pythonIcon from "../images/python.png";
 import pythonBg from "../images/pythonpic2.jpeg";
 import jsIcon from "../images/js.png";
@@ -14,7 +14,6 @@ import cyberBg from "../images/cyberpic.jpeg";
 import sqlIcon from "../images/sql.png";
 import sqlBg from "../images/sqlpic.jpeg";
 
-// Données pour chaque subtab
 const languagesData = [
   {
     id: 0,
@@ -63,54 +62,57 @@ function Languages() {
   const sectionRefs = useRef([]);
   const [isInView, setIsInView] = useState(false);
 
-  // Ajouter chaque élément aux refs
+  // Ajout des éléments dans les refs
   const addToRefs = (el) => {
     if (el && !sectionRefs.current.includes(el)) {
       sectionRefs.current.push(el);
     }
   };
 
-  // Fonction pour vérifier si la section "subtabs" est dans la vue
-  const checkIfInView = () => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const rect = container.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    
-    // Vérifie si la section "subtabs" est visible
-    if (rect.top <= windowHeight && rect.bottom >= 0) {
-      setIsInView(true);
-    } else {
-      setIsInView(false);
-    }
-  };
-
+  // Optimisation : vérification de la visibilité de la section avec requestAnimationFrame
   useEffect(() => {
-    window.addEventListener("scroll", checkIfInView);
-    checkIfInView(); // Vérifie dès le début si la section est visible
+    let ticking = false;
+    const checkIfInView = () => {
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      setIsInView(rect.top <= windowHeight && rect.bottom >= 0);
+      ticking = false;
+    };
 
+    const handleScrollInView = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(checkIfInView);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollInView, { passive: true });
+    // Vérification initiale
+    checkIfInView();
     return () => {
-      window.removeEventListener("scroll", checkIfInView);
+      window.removeEventListener("scroll", handleScrollInView);
     };
   }, []);
 
+  // Optimisation du scroll pour animer les sections
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-  
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight; // Hauteur de la fenêtre
-      const containerTop = container.getBoundingClientRect().top; // Position du container par rapport à la fenêtre
-      const totalHeight = container.scrollHeight; // Hauteur totale du contenu à faire défiler
-  
-      // Calcul du ratio de progression en fonction de la position de scroll
-      const progress = Math.max(0, -containerTop) / (totalHeight - windowHeight); // Progression entre 0 et 1
-  
-      // On fait en sorte que progress soit entre 0 et 1
-      const activeIndex = Math.min(languagesData.length - 1, Math.floor(progress * languagesData.length));
-      const offset = (progress * languagesData.length) - activeIndex;
-  
+    let ticking = false;
+
+    const updateSections = () => {
+      const windowHeight = window.innerHeight;
+      const containerTop = container.getBoundingClientRect().top;
+      const totalHeight = container.scrollHeight;
+      const progress = Math.max(0, -containerTop) / (totalHeight - windowHeight);
+      const activeIndex = Math.min(
+        languagesData.length - 1,
+        Math.floor(progress * languagesData.length)
+      );
+      const offset = progress * languagesData.length - activeIndex;
+
       sectionRefs.current.forEach((section, index) => {
         if (index === activeIndex) {
           section.style.transform = `translateY(-${offset * 100}%)`;
@@ -123,18 +125,28 @@ function Languages() {
           section.style.opacity = 0;
         }
       });
+      ticking = false;
     };
-  
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initialise dès le début
-  
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    const handleScrollSections = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateSections);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollSections, { passive: true });
+    // Initialisation
+    updateSections();
+    return () => {
+      window.removeEventListener("scroll", handleScrollSections);
+    };
   }, []);
-  
+
   return (
     <div id="languages" className="languages-container">
       <div className="languages-tab">
-        {/* Animation du titre depuis la droite seulement quand "subtabs" est dans la vue */}
+        {/* Animation du titre depuis la droite lorsque "subtabs" est dans la vue */}
         <motion.div 
           className="languages-title"
           initial={{ x: "100%", opacity: 0 }}
@@ -160,7 +172,7 @@ function Languages() {
             style={{
               backgroundImage: `url(${language.bg})`,
               position: "absolute",
-              top: `${(language.id / languagesData.length) * 100}%`, // Positionnement relatif
+              top: `${(language.id / languagesData.length) * 100}%`,
               left: 0,
               width: "100%",
               height: "100vh",

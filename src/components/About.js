@@ -38,7 +38,9 @@ function About() {
   const [textProgress, setTextProgress] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateStyles = () => {
       const scrollY = window.scrollY;
       setTitlePosition(scrollY / 10);
       setBackgroundWidth(Math.min(scrollY / 3, 100));
@@ -57,11 +59,23 @@ function About() {
         const progress = Math.min(Math.max((containerHeight - rect.bottom) / (containerHeight * 0.8), 0), 1);
         setTextProgress(progress);
       }
+      ticking = false;
     };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Exécution initiale
-    return () => window.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateStyles();
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    updateStyles(); // exécution initiale
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const h2Text =

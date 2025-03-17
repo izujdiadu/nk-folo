@@ -10,17 +10,20 @@ function Contact() {
 
   const getResponsiveFontSize = useCallback((screenWidth) => {
     if (screenWidth <= 480) {
-      return 40; // Téléphones
+      return 20; // Téléphones
     } else if (screenWidth <= 768) {
-      return 60; // Tablettes
+      return 40; // Tablettes
     } else if (screenWidth <= 1024) {
-      return 80; // Petits écrans
+      return 60; // Petits écrans
     } else {
-      return 120; // Grands écrans
+      return 100; // Grands écrans
     }
   }, []);
 
-  const handleScroll = useCallback(() => {
+  // Ref pour éviter des appels multiples
+  const tickingRef = useRef(false);
+
+  const updateFontStyles = () => {
     const screenWidth = window.innerWidth;
     const fontSize = getResponsiveFontSize(screenWidth);
 
@@ -46,11 +49,20 @@ function Contact() {
       const newFontSize = fontSize + (100 - fontSize) * progress;
       h3Ref.current.style.fontSize = `${newFontSize}px`;
     }
+    tickingRef.current = false;
+  };
+
+  const handleScroll = useCallback(() => {
+    if (!tickingRef.current) {
+      tickingRef.current = true;
+      window.requestAnimationFrame(updateFontStyles);
+    }
   }, [getResponsiveFontSize]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Première exécution au montage
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Première exécution au montage
+    updateFontStyles();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
