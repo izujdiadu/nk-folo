@@ -23,7 +23,7 @@ function Contact() {
   // Ref pour éviter des appels multiples
   const tickingRef = useRef(false);
 
-  const updateFontStyles = () => {
+  const updateFontStyles = useCallback(() => {
     const screenWidth = window.innerWidth;
     const fontSize = getResponsiveFontSize(screenWidth);
 
@@ -50,21 +50,21 @@ function Contact() {
       h3Ref.current.style.fontSize = `${newFontSize}px`;
     }
     tickingRef.current = false;
-  };
+  }, [getResponsiveFontSize]);
 
   const handleScroll = useCallback(() => {
     if (!tickingRef.current) {
       tickingRef.current = true;
       window.requestAnimationFrame(updateFontStyles);
     }
-  }, [getResponsiveFontSize]);
+  }, [updateFontStyles]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     // Première exécution au montage
     updateFontStyles();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+  }, [handleScroll, updateFontStyles]);
 
   useEffect(() => {
     const lineElement = lineRef.current;
