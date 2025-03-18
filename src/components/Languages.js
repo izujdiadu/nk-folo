@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "../styles/Languages.css";
 import { motion } from "framer-motion";
-import throttle from "lodash.throttle";
 
 // Import des images
 import pythonIcon from "../images/python.png";
@@ -70,31 +69,39 @@ function Languages() {
     }
   };
 
-  // Vérification de la visibilité de la section
+  // Optimisation : vérification de la visibilité de la section avec requestAnimationFrame
   useEffect(() => {
+    let ticking = false;
     const checkIfInView = () => {
       const container = containerRef.current;
       if (!container) return;
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       setIsInView(rect.top <= windowHeight && rect.bottom >= 0);
+      ticking = false;
     };
 
-    const throttledCheckIfInView = throttle(checkIfInView, 100);
-    window.addEventListener("scroll", throttledCheckIfInView, { passive: true });
-    // Appel initial
-    throttledCheckIfInView();
+    const handleScrollInView = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(checkIfInView);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollInView, { passive: true });
+    // Vérification initiale
+    checkIfInView();
     return () => {
-      window.removeEventListener("scroll", throttledCheckIfInView);
-      throttledCheckIfInView.cancel();
+      window.removeEventListener("scroll", handleScrollInView);
     };
   }, []);
 
-  // Animation des sections
+  // Optimisation du scroll pour animer les sections
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    
+    let ticking = false;
+
     const updateSections = () => {
       const windowHeight = window.innerHeight;
       const containerTop = container.getBoundingClientRect().top;
@@ -118,21 +125,28 @@ function Languages() {
           section.style.opacity = 0;
         }
       });
+      ticking = false;
     };
 
-    const throttledUpdateSections = throttle(updateSections, 100);
-    window.addEventListener("scroll", throttledUpdateSections, { passive: true });
-    // Appel initial
-    throttledUpdateSections();
+    const handleScrollSections = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateSections);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollSections, { passive: true });
+    // Initialisation
+    updateSections();
     return () => {
-      window.removeEventListener("scroll", throttledUpdateSections);
-      throttledUpdateSections.cancel();
+      window.removeEventListener("scroll", handleScrollSections);
     };
   }, []);
 
   return (
     <div id="languages" className="languages-container">
       <div className="languages-tab">
+        {/* Animation du titre depuis la droite lorsque "subtabs" est dans la vue */}
         <motion.div 
           className="languages-title"
           initial={{ x: "100%", opacity: 0 }}

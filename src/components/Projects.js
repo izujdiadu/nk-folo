@@ -13,7 +13,6 @@ import apppic from "../images/apppic.jpeg";
 import java from "../images/java.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
-import throttle from "lodash.throttle";
 
 const projectData = [
   {
@@ -57,27 +56,38 @@ const projectData = [
 function Projects() {
   const [currentProject, setCurrentProject] = useState(0);
   const [showDesc, setShowDesc] = useState(false);
-  const [titlePosition, setTitlePosition] = useState(0);
-  const [backgroundWidth, setBackgroundWidth] = useState(0);
+  
+  // États pour le titre et le fond
+  const [titlePosition, setTitlePosition] = useState(0); 
+  const [backgroundWidth, setBackgroundWidth] = useState(0); 
 
+  // Optimisation du scroll avec requestAnimationFrame et listener passif
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const position = window.innerWidth <= 480 ? scrollY / 8 : scrollY / 10;
-      setTitlePosition(position);
-      const newWidth = Math.min(scrollY / 3, 100);
-      setBackgroundWidth(newWidth);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          // Modification ici : ajustement selon la largeur de l'écran
+          const position = window.innerWidth <= 480 ? scrollY / 8 : scrollY / 10;
+          setTitlePosition(position);
+          const newWidth = Math.min(scrollY / 3, 100);
+          setBackgroundWidth(newWidth);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    const throttledHandleScroll = throttle(handleScroll, 100);
-    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", throttledHandleScroll);
-      throttledHandleScroll.cancel();
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const project = projectData[currentProject];
+
+  // Vous pouvez désormais utiliser titlePosition directement, sans ajustement additionnel
+  // ou conserver un ajustement minimal si besoin.
   const adjustedTitlePosition = titlePosition;
 
   const containerVariants = {
