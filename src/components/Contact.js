@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import "../styles/Contact.css";
 import { FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
+import throttle from "lodash.throttle";
 
 function Contact() {
   const lineRef = useRef(null);
@@ -19,9 +20,6 @@ function Contact() {
       return 140; // Grands écrans
     }
   }, []);
-
-  // Ref pour éviter des appels multiples
-  const tickingRef = useRef(false);
 
   const updateFontStyles = useCallback(() => {
     const screenWidth = window.innerWidth;
@@ -49,22 +47,18 @@ function Contact() {
       const newFontSize = fontSize + (100 - fontSize) * progress;
       h3Ref.current.style.fontSize = `${newFontSize}px`;
     }
-    tickingRef.current = false;
   }, [getResponsiveFontSize]);
 
-  const handleScroll = useCallback(() => {
-    if (!tickingRef.current) {
-      tickingRef.current = true;
-      window.requestAnimationFrame(updateFontStyles);
-    }
-  }, [updateFontStyles]);
-
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Première exécution au montage
-    updateFontStyles();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll, updateFontStyles]);
+    const throttledUpdateFontStyles = throttle(updateFontStyles, 100);
+    window.addEventListener("scroll", throttledUpdateFontStyles, { passive: true });
+    // Exécution initiale
+    throttledUpdateFontStyles();
+    return () => {
+      window.removeEventListener("scroll", throttledUpdateFontStyles);
+      throttledUpdateFontStyles.cancel();
+    };
+  }, [updateFontStyles]);
 
   useEffect(() => {
     const lineElement = lineRef.current;

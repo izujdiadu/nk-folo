@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import throttle from "lodash.throttle";
 import "../styles/Header.css";
 import codingvid from "../videos/codingvid.mp4";
-import newvideo from "../images/newvideo.jpeg"; // Importez l'image à utiliser pour mobile
+import newvideo from "../images/newvideo.jpeg";
 import { FaTimes, FaCheckCircle } from "react-icons/fa";
 
 function Header() {
@@ -16,23 +17,19 @@ function Header() {
   });
   const [isMobile, setIsMobile] = useState(false);
 
-  // Détection du mobile via la largeur d'écran
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 480);
     };
-    handleResize(); // Vérifie dès le montage
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    let ticking = false;
-
     const updateStyles = () => {
       const scrollY = window.scrollY;
       const opacityValue = Math.min(scrollY / 500, 1);
-
       const r = Math.floor(48 * opacityValue);
       const g = Math.floor(63 * opacityValue);
       const b = Math.floor(159 * opacityValue);
@@ -58,23 +55,21 @@ function Header() {
         filter: `blur(${videoBlur}px) brightness(${videoBrightness}) hue-rotate(${videoHue}deg)`,
         boxShadow: videoShadow,
       });
-      ticking = false;
     };
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          updateStyles();
-        });
-        ticking = true;
-      }
-    };
+    // On throttle updateStyles pour qu'il ne s'exécute qu'une fois toutes les 100 ms
+    const throttledUpdateStyles = throttle(() => {
+      updateStyles();
+    }, 100);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", throttledUpdateStyles, { passive: true });
+    throttledUpdateStyles(); // initial call
+
     setIsVisible(true);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", throttledUpdateStyles);
+      throttledUpdateStyles.cancel();
     };
   }, []);
 
