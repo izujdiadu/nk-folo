@@ -63,14 +63,12 @@ function Languages() {
   const sectionRefs = useRef([]);
   const [isInView, setIsInView] = useState(false);
 
-  // Ajout des éléments dans les refs
   const addToRefs = (el) => {
     if (el && !sectionRefs.current.includes(el)) {
       sectionRefs.current.push(el);
     }
   };
 
-  // Vérification de la visibilité de la section
   useEffect(() => {
     const checkIfInView = () => {
       const container = containerRef.current;
@@ -80,17 +78,15 @@ function Languages() {
       setIsInView(rect.top <= windowHeight && rect.bottom >= 0);
     };
 
-    const throttledCheckIfInView = throttle(checkIfInView, 100);
-    window.addEventListener("scroll", throttledCheckIfInView, { passive: true });
-    // Appel initial
-    throttledCheckIfInView();
+    const throttledCheck = throttle(checkIfInView, 100);
+    window.addEventListener("scroll", throttledCheck, { passive: true });
+    throttledCheck();
     return () => {
-      window.removeEventListener("scroll", throttledCheckIfInView);
-      throttledCheckIfInView.cancel();
+      window.removeEventListener("scroll", throttledCheck);
+      throttledCheck.cancel();
     };
   }, []);
 
-  // Animation des sections
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -120,13 +116,12 @@ function Languages() {
       });
     };
 
-    const throttledUpdateSections = throttle(updateSections, 100);
-    window.addEventListener("scroll", throttledUpdateSections, { passive: true });
-    // Appel initial
-    throttledUpdateSections();
+    const throttledUpdate = throttle(updateSections, 100);
+    window.addEventListener("scroll", throttledUpdate, { passive: true });
+    throttledUpdate();
     return () => {
-      window.removeEventListener("scroll", throttledUpdateSections);
-      throttledUpdateSections.cancel();
+      window.removeEventListener("scroll", throttledUpdate);
+      throttledUpdate.cancel();
     };
   }, []);
 

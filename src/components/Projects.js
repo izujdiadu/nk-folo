@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/Projects.css";
 import ControllerPic from "../images/controller.png";
 import PythonPic from "../images/pythonpic.jpeg";
@@ -57,28 +57,29 @@ const projectData = [
 function Projects() {
   const [currentProject, setCurrentProject] = useState(0);
   const [showDesc, setShowDesc] = useState(false);
-  const [titlePosition, setTitlePosition] = useState(0);
-  const [backgroundWidth, setBackgroundWidth] = useState(0);
+  const titleRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const position = window.innerWidth <= 480 ? scrollY / 8 : scrollY / 10;
-      setTitlePosition(position);
+      const pos = window.innerWidth <= 480 ? scrollY / 8 : scrollY / 10;
       const newWidth = Math.min(scrollY / 3, 100);
-      setBackgroundWidth(newWidth);
+      if (titleRef.current) {
+        titleRef.current.style.transform = `translateX(${pos}px)`;
+        titleRef.current.style.width = `${newWidth}%`;
+      }
     };
 
-    const throttledHandleScroll = throttle(handleScroll, 100);
-    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
+    const throttledScroll = throttle(handleScroll, 150);
+    window.addEventListener("scroll", throttledScroll, { passive: true });
+    throttledScroll();
     return () => {
-      window.removeEventListener("scroll", throttledHandleScroll);
-      throttledHandleScroll.cancel();
+      window.removeEventListener("scroll", throttledScroll);
+      throttledScroll.cancel();
     };
   }, []);
 
   const project = projectData[currentProject];
-  const adjustedTitlePosition = titlePosition;
 
   const containerVariants = {
     hidden: { opacity: 0, height: 0 },
@@ -121,12 +122,8 @@ function Projects() {
       <div className="projects-tab">
         <div
           className="projects-title"
-          style={{
-            transform: `translateX(${adjustedTitlePosition}px)`,
-            backgroundColor: "#D32F2F",
-            width: `${backgroundWidth}%`,
-            transition: "width 0.3s ease",
-          }}
+          ref={titleRef}
+          style={{ backgroundColor: "#D32F2F", transition: "width 0.3s ease" }}
         >
           <h1>MY PROJECTS</h1>
         </div>
@@ -178,17 +175,10 @@ function Projects() {
                 animate="visible"
                 exit="exit"
               >
-                <motion.div
-                  className="projects-subtab-pic"
-                  variants={childVariants}
-                >
+                <motion.div className="projects-subtab-pic" variants={childVariants}>
                   <img src={project.screenshot} alt="Project Screenshot" />
                 </motion.div>
-
-                <motion.div
-                  className="projects-subtab-desc"
-                  variants={childVariants}
-                >
+                <motion.div className="projects-subtab-desc" variants={childVariants}>
                   <h3>
                     {project.description.split(" — ")[0]} —{" "}
                     <span id="white">
@@ -196,11 +186,7 @@ function Projects() {
                     </span>
                   </h3>
                 </motion.div>
-
-                <motion.div
-                  className="projects-subtab2"
-                  variants={childVariants}
-                >
+                <motion.div className="projects-subtab2" variants={childVariants}>
                   <div className="projects-subtab2-lang">
                     <h2>PROGRAMMING LANGUAGES:</h2>
                     <img src={project.languages} alt="Project Language" />
@@ -209,24 +195,14 @@ function Projects() {
                     <h2>PROJECT GALLERY:</h2>
                   </div>
                 </motion.div>
-
                 <motion.div
                   className="desc-close"
                   variants={childVariants}
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    zIndex: 10,
-                  }}
+                  style={{ position: "absolute", top: "10px", right: "10px", zIndex: 10 }}
                 >
                   <button
                     onClick={() => setShowDesc(false)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
+                    style={{ background: "none", border: "none", cursor: "pointer" }}
                   >
                     <FaTimes size={40} color="white" />
                   </button>

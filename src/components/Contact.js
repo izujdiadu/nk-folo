@@ -50,13 +50,12 @@ function Contact() {
   }, [getResponsiveFontSize]);
 
   useEffect(() => {
-    const throttledUpdateFontStyles = throttle(updateFontStyles, 100);
-    window.addEventListener("scroll", throttledUpdateFontStyles, { passive: true });
-    // Exécution initiale
-    throttledUpdateFontStyles();
+    const throttledUpdate = throttle(updateFontStyles, 100);
+    window.addEventListener("scroll", throttledUpdate, { passive: true });
+    throttledUpdate();
     return () => {
-      window.removeEventListener("scroll", throttledUpdateFontStyles);
-      throttledUpdateFontStyles.cancel();
+      window.removeEventListener("scroll", throttledUpdate);
+      throttledUpdate.cancel();
     };
   }, [updateFontStyles]);
 
